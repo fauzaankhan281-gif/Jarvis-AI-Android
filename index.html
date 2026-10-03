@@ -1,12 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jarvis AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JARVIS AI</title>
+<style>
+body {
+  margin: 0;
+  background: #050b18;
+  color: #00eaff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+.container {
+  padding: 25px 15px;
+}
+h1 {
+  font-size: 32px;
+  text-shadow: 0 0 15px #00eaff;
+}
+.circle {
+  width: 180px;
+  height: 180px;
+  border: 4px solid #00eaff;
+  border-radius: 50%;
+  margin: 40px auto;
+  box-shadow: 0 0 30px #00eaff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+button, input {
+  padding: 14px;
+  margin: 7px;
+  border-radius: 25px;
+  border: 1px solid #00eaff;
+  background: #07172b;
+  color: white;
+  font-size: 16px;
+}
+button {
+  cursor: pointer;
+}
+#output {
+  color: white;
+  margin: 25px auto;
+  max-width: 400px;
+}
+</style>
 </head>
-<body style="background:#101820;color:white;text-align:center;font-family:Arial">
-  <h1>JARVIS AI</h1>
-  <p>Hello! I am your personal assistant.</p>
-  <button onclick="alert('Hello!')">Start Jarvis</button>
+<body>
+<div class="container">
+  <h1>J.A.R.V.I.S</h1>
+  <p>PERSONAL AI ASSISTANT</p>
+
+  <div class="circle">AI</div>
+
+  <button onclick="listen()">🎙️ Speak</button>
+  <br>
+  <input id="command" placeholder="Type your command">
+  <button onclick="runCommand()">Send</button>
+
+  <div id="output">Hello! I am Jarvis.</div>
+</div>
+
+<script>
+const output = document.getElementById("output");
+
+function speak(text) {
+  output.innerText = text;
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-IN";
+  speechSynthesis.speak(speech);
+}
+
+function runCommand() {
+  const cmd = document.getElementById("command").value.toLowerCase();
+
+  if (cmd.includes("hello") || cmd.includes("hi")) {
+    speak("Hello! How can I help you?");
+  } else if (cmd.includes("time")) {
+    speak("The time is " + new Date().toLocaleTimeString());
+  } else if (cmd.includes("date")) {
+    speak("Today's date is " + new Date().toLocaleDateString());
+  } else if (cmd.includes("open youtube")) {
+    speak("Opening YouTube");
+    window.open("https://youtube.com", "_blank");
+  } else if (cmd.includes("open google")) {
+    speak("Opening Google");
+    window.open("https://google.com", "_blank");
+  } else {
+    speak("Sorry, I don't know that command yet.");
+  }
+}
+
+function listen() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    speak("Voice recognition is not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.onresult = function(event) {
+    document.getElementById("command").value =
+      event.results[0][0].transcript;
+    runCommand();
+  };
+  recognition.start();
+}
+</script>
 </body>
 </html>
